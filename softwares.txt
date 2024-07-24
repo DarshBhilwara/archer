@@ -1,0 +1,23 @@
+terminal - kitty
+wallpaper - hyprpaper
+color picker - hyprpicker
+idle mode - hypridle
+logout screen - wlogout
+file manager 1 - nautilus
+file manager 2 - vifm
+task manager - htop and btop
+gtk theme changer - nwg-look
+notification manager - dunst
+browser 1 - brave 
+browser 2 - firefox-beta
+browser 3 - firefox
+bluetooth - bluez and blueman
+status bar - waybar
+screenshot - hyprshot
+fetch - fastfetch
+music player - spotify-launcher
+photo editor - gimp 
+image viewer - imv
+pdf viewer - evince
+video editor - kdenlive
+torrent client - qbittorrent
