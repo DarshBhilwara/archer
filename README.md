@@ -14,7 +14,8 @@ Create a bootable usb with arch installation image from <https://archlinux.org/d
 
 ## Setting up disk
 Use fdisk to partition disk like (suitable for 1tb drive)
-- 2GB EFI System for boot
+- 2GB EFI System for EFI
+- 2GB Linux Filesystem for boot
 - 180GB Linux Filesystem for root
 - rest Linux Filesystem for home
 
