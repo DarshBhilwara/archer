@@ -1,5 +1,5 @@
 # About
-This is my arch installation with dotfiles.
+This is my arch installation process.
 
 ## Create Arch ISO
 Create a bootable usb with arch installation image from <https://archlinux.org/download/> and boot in the live environment.
@@ -27,18 +27,27 @@ cd archer
 chmod +x base.sh
 ./base.sh
 ```
-
-## Installing Full System
-
+## Setting User 
 ```
 arch-chroot /mnt
-cd /home
+useradd -m {username}
+usermod -c "{user}" {username}
+usermod -aG wheel,storage,power,audio,video {username}
+passwd (and set root password)
+visudo (and remove #from # %wheel ALL=(ALL:ALL) ALL )
+passwd {username} (and set user password)
+su {username}
+enable multilib in /etc/pacman.conf
+cd /home/{username}
+```
+
+## Installing Full System
+```
 git clone https://github.com/DarshBhilwara/archer.git
 cd archer
 chmod +x post.sh
 ./post.sh
 ```
-- Remember to set user and root pasword.
 
 ## Miscellaneous
 - Add Nvidia environment variables in grub
