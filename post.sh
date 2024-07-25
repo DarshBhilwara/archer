@@ -1,7 +1,37 @@
 #!/bin/bash
 
-echo -n "Please enter EFI partition (ex /dev/sda1 or /dev/nvme0n1p1): "
+echo -n "Enter EFI partition (ex /dev/sda1 or /dev/nvme0n1p1): "
 read EFI
+
+echo -n "Enter username : "
+read USER
+
+echo -n "Enter password (carefully) : "
+read PASS
+
+echo "---------------------------"
+echo "----- Adding New User -----"
+echo "---------------------------"
+useradd -m "${USER}"
+usermod -c ""${USER}"" "${USER}"
+usermod -aG wheel,storage,power,audio,video "${USER}"
+echo "--------------------------"
+echo "----- Enabling Wheel -----"
+echo "--------------------------"
+sed -i '/%wheel\ ALL=(ALL)\ ALL/s/^#//' /etc/sudoers
+
+echo "-------------------------"
+echo "----- Changing User -----"
+echo "-------------------------"
+cd /home/"${USER}"
+su "${USER}"
+
+
+echo "----------------------------------------"
+echo "----- Enabling Multilib Repository -----"
+echo "----------------------------------------"
+sudo sed -i "/\[multilib\]/,/Include/"'s/^#//' /etc/pacman.conf
+sudo pacman -Sy
 
 echo "-------------------------------"
 echo "----- Installing Packages -----"
