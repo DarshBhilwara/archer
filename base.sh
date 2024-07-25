@@ -34,7 +34,7 @@ mount "${HOME}" /mnt/home
 echo "--------------------------------------"
 echo "----- INSTALLING Base Arch Linux -----"
 echo "--------------------------------------"
-pacstrap /mnt base vim sudo --noconfirm --needed 
+pacstrap /mnt base git vim sudo --noconfirm --needed 
 
 echo "----------------------------"
 echo "----- Generating fstab -----"
