@@ -7,7 +7,7 @@ echo "-------------------------------"
 echo "----- Installing Packages -----"
 echo "-------------------------------"
 
-sudo pacman -S base-devel dosfstools grub efibootmgr mtools sudo os-prober linux linux-headers pipewire-pulse networkmanager linux-firmware linux-lts linux-lts-headers wireless_tools nano intel-ucode wpa_supplicant dialog os-prober kitty hyprland nautilus nvidia-dkms nvidia-utils lib32-nvidia-utils waybar firefox libva-nvidia-driver sddm git neovim ttf-arimo-nerd qt5ct qt6ct qt5-wayland xdg-desktop-portal-hyprland pipewire wireplumber qt6-wayland polkit-kde-agent vifm figlet fastfetch htop btop gvfs-mtp brightnessctl bluez bluez-utils blueman gtk3 gtk4 dunst qt6-svg qt6-declarative rofi-wayland bash-completion telegram-desktop virtualbox virtualbox-host-modules-arch kdenlive eog evince qbittorrent tp_smapi tlp nm-connection-editor qt5 qt6 vlc mpv yt-dlp wine gnome-disk-utility ntfsprogs inkscape spotify-launcher plocate man net-tools dhclient bind nmap traceroute ttf-nerd-fonts-symbols rofimoji noto-fonts-emoji wtype --noconfirm --needed
+sudo pacman -S base-devel dosfstools grub efibootmgr mtools sudo os-prober linux linux-headers pipewire-pulse networkmanager linux-firmware linux-lts linux-lts-headers wireless_tools nano intel-ucode wpa_supplicant dialog os-prober kitty hyprland nautilus nvidia-dkms nvidia-utils lib32-nvidia-utils waybar firefox libva-nvidia-driver sddm git neovim ttf-arimo-nerd qt5ct qt6ct qt5-wayland xdg-desktop-portal-hyprland pipewire wireplumber qt6-wayland polkit-kde-agent vifm figlet fastfetch htop btop gvfs-mtp brightnessctl bluez bluez-utils blueman gtk3 gtk4 dunst qt6-svg qt6-declarative rofi-wayland bash-completion telegram-desktop virtualbox virtualbox-host-modules-arch kdenlive eog evince qbittorrent tp_smapi tlp nm-connection-editor qt5 qt6 vlc mpv yt-dlp wine gnome-disk-utility ntfsprogs inkscape spotify-launcher plocate man net-tools dhclient bind nmap traceroute ttf-nerd-fonts-symbols rofimoji noto-fonts-emoji wtype bat tree hyprlock --noconfirm --needed
 
 
 echo "------------------------------------"l
@@ -32,7 +32,7 @@ rm -rf yay
 echo "-----------------------------------"
 echo "----- Installing AUR packages -----"
 echo "-----------------------------------"
-yay -S brave-bin firefox-beta-bin visual-studio-code-bin hyprpicker hyprshot hyprpaper wlogout slimbookbattery bottles gimp-devel ani-cli webcord hyprshade
+yay -S brave-bin firefox-beta-bin visual-studio-code-bin hyprpicker hyprshot hyprpaper wlogout slimbookbattery bottles gimp-devel ani-cli webcord hyprshade sddm-theme-catppuccin
 
 #Dotfiles
 echo "----------------------------"
