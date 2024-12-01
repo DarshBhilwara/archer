@@ -61,9 +61,7 @@ chmod +x post.sh
     ```
 - In .bashrc add a line - source ~/.config/terminal/bashrc
 - For lenovo legion <https://github.com/johnfanv2/LenovoLegionLinux?tab=readme-ov-file>
-- In /usr/share/hyprshade/shaders/blue-light-filter.glsl increase const float temperature to 5000
 - In /etc/systemd/logind.conf set HandlePowerKey=suspend
-install spicetify
 - Remove # from extra arguments for wayland line from /etc/spotify-launcher.conf
 - Install spicetify for spotify
 - Set color theme (currently using kanagawa).

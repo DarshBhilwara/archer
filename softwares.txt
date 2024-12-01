@@ -21,3 +21,9 @@ image viewer - imv
 pdf viewer - evince
 video editor - kdenlive
 torrent client - qbittorrent
+
+scrcpy
+adb
+blackarch
+obs studio
+openshot

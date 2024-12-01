@@ -1,4 +1,4 @@
-super enter = terminal
+super enter/space = terminal
 super esc = exit
 super q = firefox-beta
 super w = firefox
@@ -14,9 +14,8 @@ super print = screenshot of a window
 super shift print = screenshot of selected area
 super 0-9 = move to workspace
 super shift 0-9 = shift to workspace
-super f = full screen
+super f = toggle full screen
 super right click move = resize
 super left click move = shift in workspace
 super s = spotify
-super w = toggle waybar
 super . = emoji
