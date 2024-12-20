@@ -41,24 +41,6 @@ echo "----- Generating fstab -----"
 echo "----------------------------"
 genfstab -U /mnt >> /mnt/etc/fstab
 
-echo "----------------------------------------"
-echo "----- Setting language and locale ------"
-echo "----------------------------------------"
-
-sed -i 's/^#en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
-locale-gen
-echo "LANG=en_US.UTF-8" >> /etc/locale.conf
-
-ln -sf /usr/share/zoneinfo/Asia/Kolkata /etc/localtime
-hwclock --systohc
-
-echo "archlinux" > /etc/hostname
-cat <<EOF > /etc/hosts
-127.0.0.1	localhost
-::1			localhost
-127.0.1.1	archlinux.localdomain	archlinux
-EOF
-
 
 
 echo ''

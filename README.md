@@ -50,19 +50,12 @@ chmod +x post.sh
 ```
 
 ## Miscellaneous
-- Add Nvidia environment variables in grub
+- install graphic drivers <https://wiki.hyprland.org/Nvidia/>
 - Brave://flags and turn on ozone wayland
-- In /etc/mkinitcpio.conf MODULES add nvidia nvidia_modeset nvidia_uvm nvidia_drm and in hooks add systemd and do sudo mkinitcpio -P
 - Make swap file(size=ram+2)  <https://www.youtube.com/watch?v=HSbBl31ohjE>
-- Make a file /etc/modprobe.d/nvidia.conf and type 
-    ```
-	options nvidia NVreg_PreserveVideoMemoryAllocations=1
-	options nvidia NVreg_TemporaryFilePath=/var/tmp
-    ```
 - In .bashrc add a line - source ~/.config/terminal/bashrc
-- For lenovo legion <https://github.com/johnfanv2/LenovoLegionLinux?tab=readme-ov-file>
 - In /etc/systemd/logind.conf set HandlePowerKey=suspend
 - Remove # from extra arguments for wayland line from /etc/spotify-launcher.conf
 - Install spicetify for spotify
-- Set color theme (currently using kanagawa).
+- Set color theme (currently using kanagawa and dracula combined).
 
