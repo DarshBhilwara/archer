@@ -56,6 +56,5 @@ chmod +x post.sh
 - In .bashrc add a line - source ~/.config/terminal/bashrc
 - In /etc/systemd/logind.conf set HandlePowerKey=suspend
 - Remove # from extra arguments for wayland line from /etc/spotify-launcher.conf
-- Install spicetify for spotify
 - Set color theme (currently using kanagawa and dracula combined).
 

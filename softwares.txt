@@ -17,13 +17,7 @@ screenshot - hyprshot
 fetch - fastfetch
 music player - spotify-launcher
 photo editor - gimp 
-image viewer - imv
+image viewer - eog
 pdf viewer - evince
-video editor - kdenlive
+video editor - openshot
 torrent client - qbittorrent
-
-scrcpy
-adb
-blackarch
-obs studio
-openshot

@@ -29,12 +29,7 @@ echo "----- Installing Packages -----"
 echo "-------------------------------"
 sudo pacman -Sy
 sudo pacman -Syyu
-<<<<<<< HEAD
-sudo pacman -S base-devel dosfstools grub efibootmgr mtools sudo linux linux-headers pipewire-pulse networkmanager linux-firmware linux-lts linux-lts-headers wireless_tools nano starship unzip amd-ucode wpa_supplicant dialog os-prober kitty hyprland ripgrep nautilus waybar firefox sddm git neovim nwg-look qt5ct qt6ct qt5-wayland xdg-desktop-portal-hyprland python-virtualenv python-pipenv pipewire wireplumber qt6-wayland polkit-kde-agent wireshark-qt gnome-calculator wireshark-cli  yazi figlet fastfetch htop btop gvfs-mtp brightnessctl bluez bluez-utils blueman gtk3 gtk4 dunst qt6-svg qt6-declarative rofi-wayland bash-completion telegram-desktop virtualbox virtualbox-host-modules-arch eog evince qbittorrent nm-connection-editor qt5 qt6 vlc mpv yt-dlp wine gnome-disk-utility ntfsprogs inkscape spotify-launcher plocate man net-tools dhclient bind nmap traceroute ttf-droid otf-droid-nerd ttf-nerd-fonts-symbols rofimoji noto-fonts-emoji ffmpegthumbnailer wtype bat tree jdk-openjdk hyprlock hypridle scrcpy gnome-keyring helvum android-tools --noconfirm --needed
-=======
-sudo pacman -S base-devel dosfstools grub efibootmgr mtools sudo linux linux-headers pipewire-pulse networkmanager linux-firmware linux-lts linux-lts-headers wireless_tools nano starship unzip amd-ucode wpa_supplicant dialog os-prober kitty hyprland ripgrep nautilus waybar firefox sddm git neovim nwg-look qt5ct qt6ct qt5-wayland xdg-desktop-portal-hyprland python-virtualenv python-pipenv pipewire wireplumber qt6-wayland polkit-kde-agent wireshark-qt wireshark-cli yazi figlet fastfetch htop btop gvfs-mtp brightnessctl bluez bluez-utils blueman gtk3 gtk4 dunst qt6-svg qt6-declarative rofi-wayland bash-completion telegram-desktop virtualbox virtualbox-host-modules-arch eog evince qbittorrent nm-connection-editor qt5 qt6 vlc mpv yt-dlp wine gnome-disk-utility ntfsprogs inkscape spotify-launcher plocate man net-tools dhclient bind nmap traceroute ttf-droid otf-droid-nerd ttf-nerd-fonts-symbols rofimoji noto-fonts-emoji wtype bat tree jdk-openjdk hyprlock hypridle ffmpegthumbnailer scrcpy gnome-keyring helvum android-tools --noconfirm --needed
->>>>>>> d60bd31e2b67fa51ce070bc52401abc94b0652b6
-
+sudo pacman -S base-devel dosfstools grub efibootmgr mtools sudo linux linux-headers pipewire-pulse networkmanager linux-firmware linux-lts linux-lts-headers wireless_tools nano starship unzip amd-ucode wpa_supplicant dialog os-prober kitty hyprland ripgrep nautilus waybar firefox sddm git neovim nwg-look qt5ct qt6ct qt5-wayland xdg-desktop-portal-hyprland python-virtualenv audacity python-pipenv pipewire wireplumber qt6-wayland gimp hyprpolkitagent gnome-text-editor libreoffice-fresh sonic-visualiser wireshark-qt wireshark-cli yazi figlet fastfetch htop btop gvfs-mtp brightnessctl bluez bluez-utils blueman gtk3 gtk4 dunst qt6-svg qt6-declarative rofi-wayland bash-completion gnome-calculator telegram-desktop virtualbox virtualbox-host-modules-arch eog evince qbittorrent nm-connection-editor qt5 qt6 vlc mpv yt-dlp wine gnome-disk-utility openshot ntfsprogs inkscape spotify-launcher plocate man net-tools dhclient bind nmap traceroute ttf-droid otf-droid-nerd ttf-nerd-fonts-symbols rofimoji noto-fonts-emoji wtype bat tree jdk-openjdk hyprlock hypridle ffmpegthumbnailer scrcpy gnome-keyring helvum android-tools --noconfirm --needed
 
 echo "------------------------------------"l
 echo "----- Bootloader Installation ------"
@@ -58,9 +53,15 @@ rm -rf yay
 echo "-----------------------------------"
 echo "----- Installing AUR packages -----"
 echo "-----------------------------------"
-yay -S brave-bin firefox-beta-bin visual-studio-code-bin hyprpicker hyprshot hyprpaper wlogout bottles gimp-devel ani-cli webcord hyprsunset sddm-theme-catppuccin android-sdk-platform-tools github-desktop dracula-cursors-git
+yay -S brave-bin firefox-beta-bin visual-studio-code-bin hyprpicker hyprshot hyprpaper wlogout bottles gimp-devel ani-cli webcord hyprsunset sddm-theme-catppuccin android-sdk-platform-tools github-desktop dracula-cursors-git dracula-icons-git cloudflar-warp-bin
 
-#Dotfiles
+echo "--------------------------------"
+echo "----- Installing Blackarch -----"
+echo "--------------------------------"
+curl -O https://blackarch.org/strap.sh
+chmod +x starp.sh
+sudo ./starp.sh
+
 echo "----------------------------"
 echo "----- Getting Dotfiles -----"
 echo "----------------------------"
@@ -75,7 +76,6 @@ echo "----- Setting Time ------"
 echo "-------------------------"
 timedatectl set-timezone Asia/Kolkata
 
-#Services 
 echo "-----------------------------"
 echo "----- Enabling Services -----"
 echo "-----------------------------"
