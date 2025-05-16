@@ -14,8 +14,6 @@ read -p "Enter full name for the user: " FULLNAME
 useradd -m "$USERNAME"
 usermod -c "$FULLNAME" "$USERNAME"
 usermod -aG wheel,storage,power,audio,video "$USERNAME"
-
-# Set passwords
 echo "Set root password:"
 passwd
 echo "Set password for $USERNAME:"
@@ -23,14 +21,9 @@ passwd "$USERNAME"
 
 # Enable sudo for wheel group
 sed -i 's/^# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/' /etc/sudoers
-
 # Enable multilib
 sed -i '/\[multilib\]/,/Include/s/^#//' /etc/pacman.conf
 
-echo "-----------------------------"
-echo "----- Switching to User -----"
-echo "-----------------------------"
-su - "$USERNAME"
 
 echo "----------------------------------------"
 echo "----- Setting language and locale ------"
@@ -55,8 +48,8 @@ EOF
 echo "-------------------------------"
 echo "----- Installing Packages -----"
 echo "-------------------------------"
-sudo pacman -Sy
-sudo pacman -Syyu
+runuser -l "$USERNAME" -c 'sudo pacman -Sy'
+runuser -l "$USERNAME" -c 'sudo pacman -Syyu'
 
 echo "Select your CPU type:"
 echo "1) Intel"
@@ -170,17 +163,16 @@ esac
 
 
 # Install everything
-sudo pacman -S --noconfirm --needed $base_packages $gpu_packages $cybersec_packages $ucode_pkg
+runuser -l "$USERNAME" -c 'sudo pacman -S --noconfirm --needed $base_packages $gpu_packages $cybersec_packages $ucode_pkg'
 
 
 echo "------------------------------------"l
 echo "----- Bootloader Installation ------"
 echo "------------------------------------"
-sudo mkdir /boot/EFI
-sudo mount "${EFI}" /boot/EFI 
-sudo grub-install --target=x86_64-efi --bootloader-id=grub_uefi --recheck
-sudo grub-mkconfig -o /boot/grub/grub.cfg
-
+runuser -l "$USERNAME" -c 'sudo mkdir /boot/EFI'
+runuser -l "$USERNAME" -c 'sudo mount "${EFI}" /boot/EFI'
+runuser -l "$USERNAME" -c 'sudo grub-install --target=x86_64-efi --bootloader-id=grub_uefi --recheck'
+runuser -l "$USERNAME" -c 'sudo grub-mkconfig -o /boot/grub/grub.cfg'
 
 
 echo "------------------------------"
@@ -214,8 +206,6 @@ if [[ -f /etc/spotify-launcher.conf ]]; then
 fi
 
 
-
-
 echo "-------------------------"
 echo "----- Setting Time ------"
 echo "-------------------------"
@@ -225,10 +215,10 @@ timedatectl set-ntp true
 echo "-----------------------------"
 echo "----- Enabling Services -----"
 echo "-----------------------------"
-sudo systemctl enable NetworkManager.service
-sudo systemctl enable sddm.service 
-sudo systemctl enable bluetooth.service
-sudo systemctl enable systemd-timesyncd.service
+runuser -l "$USERNAME" -c 'sudo systemctl enable NetworkManager.service'
+runuser -l "$USERNAME" -c 'sudo systemctl enable sddm.service'
+runuser -l "$USERNAME" -c 'sudo systemctl enable bluetooth.service'
+runuser -l "$USERNAME" -c 'sudo systemctl enable systemd-timesyncd.service'
 
 echo ''
 echo "Install complete. You should reboot and read the README file for further instructions."
