@@ -102,13 +102,16 @@ echo "----- Generating fstab -----"
 echo "----------------------------"
 genfstab -U /mnt >> /mnt/etc/fstab
 
+mkdir -p /mnt/root
+cp user.sh /mnt/root/user.sh
 cp post.sh /mnt/root/post.sh
+chmod +x /mnt/root/user.sh 
 chmod +x /mnt/root/post.sh
 
 echo "---------------------------"
 echo "----- Going to chroot -----"
 echo "---------------------------"
 echo "$EFI" > /mnt/root/.efi_partition
-arch-chroot /mnt /root/post.sh
+arch-chroot /mnt /root/user.sh
 
 

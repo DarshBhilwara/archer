@@ -1,55 +1,11 @@
 #!/bin/bash
 
-EFI=$(cat /root/.efi_partition)
-rm -f /root/.efi_partition /root/post-chroot.sh
-
-echo "---------------------------"
-echo "----- Setting up User -----"
-echo "---------------------------"
-
-read -p "Enter new username: " USERNAME
-read -p "Enter full name for the user: " FULLNAME
-
-# Create the user
-useradd -m "$USERNAME"
-usermod -c "$FULLNAME" "$USERNAME"
-usermod -aG wheel,storage,power,audio,video "$USERNAME"
-echo "Set root password:"
-passwd
-echo "Set password for $USERNAME:"
-passwd "$USERNAME"
-
-# Enable sudo for wheel group
-sed -i 's/^# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/' /etc/sudoers
-# Enable multilib
-sed -i '/\[multilib\]/,/Include/s/^#//' /etc/pacman.conf
-
-
-echo "----------------------------------------"
-echo "----- Setting language and locale ------"
-echo "----------------------------------------"
-
-sed -i 's/^#en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
-locale-gen
-echo "LANG=en_US.UTF-8" >> /etc/locale.conf
-
-ln -sf /usr/share/zoneinfo/Asia/Kolkata /etc/localtime
-hwclock --systohc
-
-
-echo "archlinux" > /etc/hostname
-cat <<EOF > /etc/hosts
-127.0.0.1	localhost
-::1			localhost
-127.0.1.1	archlinux.localdomain	archlinux
-EOF
-
-
+cd 
 echo "-------------------------------"
 echo "----- Installing Packages -----"
 echo "-------------------------------"
-runuser -l "$USERNAME" -c 'sudo pacman -Sy'
-runuser -l "$USERNAME" -c 'sudo pacman -Syyu'
+sudo pacman -Sy
+sudo pacman -Syyu
 
 echo "Select your CPU type:"
 echo "1) Intel"
@@ -110,13 +66,12 @@ case "$gpu" in
     gpu_packages=""
     ;;
 esac
-
+full_min=""
 echo "Do you want a full or a minimal install?"
 echo "1) Full"
 echo "2) Minimal"
 read -rp "Enter choice [1/2]: " full_min
 
-full_min=""
 case $full_min in 
   2)
     echo "Minimal"
@@ -143,10 +98,6 @@ read -rp "Enter choice [1/2]: " cybersec_choice
 
 cybersec_packages=""
 case $cybersec_choice in 
-  0)
-    echo "No cybersec packages will be installed"
-    cybersec_packages=""
-    ;;
   1)
     echo "Cybersec Packages will be installed"
     curl -O https://blackarch.org/strap.sh
@@ -154,6 +105,10 @@ case $cybersec_choice in
     ./strap.sh
     pacman -Syu --noconfirm
     cybersec_packages="wireshark-qt wireshark-cli virtualbox virtualbox-host-modules-dkms nmap"
+    ;;
+  2)
+    echo "No cybersec packages will be installed"
+    cybersec_packages=""
     ;;
   *)
     echo "Invalid (no cybersec packages will be installed)"
@@ -163,16 +118,8 @@ esac
 
 
 # Install everything
-runuser -l "$USERNAME" -c 'sudo pacman -S --noconfirm --needed $base_packages $gpu_packages $cybersec_packages $ucode_pkg'
+sudo pacman -S --noconfirm --needed $base_packages $gpu_packages $cybersec_packages $ucode_pkg
 
-
-echo "------------------------------------"l
-echo "----- Bootloader Installation ------"
-echo "------------------------------------"
-runuser -l "$USERNAME" -c 'sudo mkdir /boot/EFI'
-runuser -l "$USERNAME" -c 'sudo mount "${EFI}" /boot/EFI'
-runuser -l "$USERNAME" -c 'sudo grub-install --target=x86_64-efi --bootloader-id=grub_uefi --recheck'
-runuser -l "$USERNAME" -c 'sudo grub-mkconfig -o /boot/grub/grub.cfg'
 
 
 echo "------------------------------"
@@ -197,28 +144,25 @@ cd dotfiles
 mv * $HOME/.config/
 cd ..
 rm -rf dotfiles
-echo 'source ~/.config/terminal/bashrc' >> /home/"$USERNAME"/.bashrc
-chown "$USERNAME":"$USERNAME" /home/"$USERNAME"/.bashrc
-sed -i 's/^#HandlePowerKey=.*/HandlePowerKey=suspend/' /etc/systemd/logind.conf
-sed -i 's/^HandlePowerKey=.*/HandlePowerKey=suspend/' /etc/systemd/logind.conf
+echo 'source ~/.config/terminal/bashrc' >> "$HOME/.bashrc"
+sudo sed -i 's/^#HandlePowerKey=.*/HandlePowerKey=suspend/' /etc/systemd/logind.conf
+sudo sed -i 's/^HandlePowerKey=.*/HandlePowerKey=suspend/' /etc/systemd/logind.conf
 if [[ -f /etc/spotify-launcher.conf ]]; then
-    sed -i 's/^#\(extra_arguments=.*--enable-features=UseOzonePlatform.*\)/\1/' /etc/spotify-launcher.conf
+    sudo sed -i 's/^#\(extra_arguments=.*--enable-features=UseOzonePlatform.*\)/\1/' /etc/spotify-launcher.conf
 fi
 
-
-echo "-------------------------"
-echo "----- Setting Time ------"
-echo "-------------------------"
-timedatectl set-timezone Asia/Kolkata
-timedatectl set-ntp true
 
 echo "-----------------------------"
 echo "----- Enabling Services -----"
 echo "-----------------------------"
-runuser -l "$USERNAME" -c 'sudo systemctl enable NetworkManager.service'
-runuser -l "$USERNAME" -c 'sudo systemctl enable sddm.service'
-runuser -l "$USERNAME" -c 'sudo systemctl enable bluetooth.service'
-runuser -l "$USERNAME" -c 'sudo systemctl enable systemd-timesyncd.service'
+sudo systemctl enable NetworkManager.service
+sudo systemctl enable sddm.service 
+sudo systemctl enable bluetooth.service
+sudo systemctl enable systemd-timesyncd.service
+
+echo "Cleaning up post-install scripts..."
+rm -f ~/post.sh
+sudo rm -f /root/user.sh
 
 echo ''
 echo "Install complete. You should reboot and read the README file for further instructions."
