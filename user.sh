@@ -41,7 +41,7 @@ cat <<EOF > /etc/hosts
 ::1			localhost
 127.0.1.1	archlinux.localdomain	archlinux
 EOF
-
+systemctl daemon-reexec
 echo "-------------------------"
 echo "----- Setting Time ------"
 echo "-------------------------"
@@ -52,6 +52,7 @@ timedatectl set-ntp true
 echo "------------------------------------"
 echo "----- Bootloader Installation ------"
 echo "------------------------------------"
+pacman -Sy --noconfirm grub efibootmgr dosfstools os-prober mtools
 mkdir /boot/EFI
 mount "${EFI}" /boot/EFI 
 grub-install --target=x86_64-efi --bootloader-id=grub_uefi --recheck

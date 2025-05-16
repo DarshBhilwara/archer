@@ -101,6 +101,7 @@ echo "----------------------------"
 echo "----- Generating fstab -----"
 echo "----------------------------"
 genfstab -U /mnt >> /mnt/etc/fstab
+arch-chroot /mnt systemctl daemon-reexec
 
 mkdir -p /mnt/root
 cp user.sh /mnt/root/user.sh
