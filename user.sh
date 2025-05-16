@@ -64,6 +64,8 @@ mv /root/post.sh /home/$USERNAME/post.sh
 chmod +x /home/$USERNAME/post.sh
 chown $USERNAME:$USERNAME /home/$USERNAME/post.sh
 
-su - "$USERNAME" -c "USERNAME=$USERNAME bash /home/$USERNAME/post.sh"
+su "$USERNAME" 
+
+echo "Now, run cd and then ./post.sh
 
 

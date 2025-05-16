@@ -117,7 +117,6 @@ case $cybersec_choice in
 esac
 
 
-# Install everything
 sudo pacman -S --noconfirm --needed $base_packages $gpu_packages $cybersec_packages $ucode_pkg
 
 
