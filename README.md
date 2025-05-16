@@ -32,6 +32,16 @@ cd
 ./post.sh
 ```
 
+## After post.sh is excuted
+```
+exit
+exit
+exit
+exit
+umount -a
+poweroff
+```
+
 ## Miscellaneous
 - Brave://flags and turn on ozone wayland
 - Make swap file(size=ram+2)  <https://www.youtube.com/watch?v=HSbBl31ohjE>
