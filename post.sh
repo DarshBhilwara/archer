@@ -126,7 +126,7 @@ echo "----- Getting AUR Helper -----"
 echo "------------------------------"
 git clone https://aur.archlinux.org/yay.git
 cd yay
-makepkg -si
+makepkg -si --noconfirm --needed
 cd ..
 rm -rf yay 
 

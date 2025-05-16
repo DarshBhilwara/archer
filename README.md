@@ -12,13 +12,6 @@ Create a bootable usb with arch installation image from <https://archlinux.org/d
 - iwctl station {device name} scan 
 - iwctl station {device name} connect {wifi name} 
 
-## Setting up disk
-Suggested for 1tb drive
-- 2GB EFI System for EFI
-- 2GB Linux Filesystem for boot
-- 180GB Linux Filesystem for root
-- rest Linux Filesystem for home
-
 ## Installing the System
 ```
 pacman -Sy git
@@ -26,6 +19,17 @@ git clone https://github.com/DarshBhilwara/archer.git
 cd archer
 chmod +x base.sh
 ./base.sh
+```
+## Suggested disk setup for 1tb drive
+- 2GB EFI System for EFI
+- 2GB Linux Filesystem for boot
+- 180GB Linux Filesystem for root
+- rest Linux Filesystem for home
+
+## After base.sh is executed
+```
+cd
+./post.sh
 ```
 
 ## Miscellaneous
