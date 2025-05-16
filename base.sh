@@ -14,8 +14,6 @@ echo -n "Enter Boot partition size (e.g., 1G): "
 read BOOT_SIZE
 echo -n "Enter Root(/) partition size (e.g., 30G): "
 read ROOT_SIZE
-echo -n "Enter Home partition size (or leave empty for remaining space): "
-read HOME_SIZE
 
 echo "Wiping and partitioning $DISK..."
 
@@ -46,18 +44,21 @@ n
 
 n
 4
-${HOME_SIZE:++${HOME_SIZE}}
+
 
 w
 EOF
 
-# Ensure EFI partition type is correct
+sleep 1
+
 fdisk "$DISK" <<EOF
 t
 1
 1
 w
 EOF
+
+sleep 1
 
 # Set partition variables depending on disk type
 if [[ "$DISK" == *"nvme"* ]]; then
@@ -101,9 +102,13 @@ echo "----- Generating fstab -----"
 echo "----------------------------"
 genfstab -U /mnt >> /mnt/etc/fstab
 
+cp post.sh /mnt/root/post.sh
+chmod +x /mnt/root/post.sh
 
+echo "---------------------------"
+echo "----- Going to chroot -----"
+echo "---------------------------"
+echo "$EFI" > /mnt/root/.efi_partition
+arch-chroot /mnt /root/post.sh
 
-echo ''
-echo "Base Install complete. Now use README file for further instructions."
-echo ''
 
