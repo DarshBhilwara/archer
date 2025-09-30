@@ -51,7 +51,7 @@ case "$gpu" in
     ;;
   2)
     echo "NVIDIA GPU"
-    gpu_packages="nvidia nvidia-utils nvidia-settings"
+    gpu_packages="nvidia nvidia-utils nvidia-settings nvidia-lts linux-firmware-nvidia"
     ;;
   3)
     echo "AMD GPU"
@@ -75,18 +75,18 @@ read -rp "Enter choice [1/2]: " full_min
 case $full_min in 
   2)
     echo "Minimal"
-    base_packages="base-devel dosfstools grub efibootmgr mtools wireless_tools sudo linux linux-headers pipewire-pulse networkmanager linux-firmware linux-lts linux-lts-headers nano starship unzip wpa_supplicant dialog os-prober kitty hyprland ripgrep nautilus waybar sddm git neovim nwg-look qt5ct qt6ct qt5-wayland xdg-desktop-portal-hyprland python-virtualenv python-pipenv pipewire wireplumber qt6-wayland hyprpolkitagent yazi figlet fastfetch htop btop gvfs-mtp brightnessctl bluez bluez-utils blueman gtk3 gtk4 dunst qt6-svg qt6-declarative rofi-wayland bash-completion eog evince nm-connection-editor qt5 qt6 vlc mpv yt-dlp wine gnome-disk-utility ntfsprogs plocate man net-tools dhclient bind traceroute ttf-droid otf-droid-nerd ttf-nerd-fonts-symbols rofimoji noto-fonts-emoji wtype bat tree jdk-openjdk hyprlock hypridle ffmpegthumbnailer scrcpy gnome-keyring helvum android-tools"
+    base_packages="base-devel dosfstools grub efibootmgr mtools wireless_tools sudo linux linux-headers pipewire-pulse networkmanager linux-firmware linux-lts linux-lts-headers nano starship unzip wpa_supplicant dialog os-prober kitty hyprland ripgrep nautilus waybar sddm git neovim nwg-look qt5ct qt6ct qt5-wayland xdg-desktop-portal-hyprland python-virtualenv python-pipenv pipewire wireplumber qt6-wayland hyprpolkitagent yazi figlet fastfetch htop btop gvfs-mtp brightnessctl bluez bluez-utils blueman gtk3 gtk4 dunst qt6-svg qt6-declarative rofi-wayland bash-completion eog evince nm-connection-editor qt5 qt6 vlc mpv yt-dlp wine gnome-disk-utility ntfsprogs plocate man net-tools dhclient bind traceroute ttf-droid otf-droid-nerd ttf-nerd-fonts-symbols rofimoji noto-fonts-emoji wtype bat tree jdk-openjdk hyprlock hypridle ffmpegthumbnailer scrcpy gnome-keyring helvum android-tools ttf-dejavu ifuse libimobiledevice usbmuxd gvfs-afc"
     aur_packages=hyprpicker hyprshot hyprpaper wlogout ani-cli hyprsunset sddm-theme-catppuccin android-sdk-platform-tools dracula-cursors-git dracula-icons-git
 
     ;;
   1)
     echo "Full"
-    base_packages="base-devel dosfstools grub efibootmgr mtools wireless_tools sudo linux linux-headers pipewire-pulse networkmanager linux-firmware linux-lts linux-lts-headers nano starship unzip wpa_supplicant dialog os-prober kitty hyprland ripgrep nautilus waybar firefox sddm git neovim nwg-look qt5ct qt6ct qt5-wayland xdg-desktop-portal-hyprland python-virtualenv audacity python-pipenv pipewire wireplumber qt6-wayland gimp hyprpolkitagent gnome-text-editor libreoffice-fresh sonic-visualiser yazi figlet fastfetch htop btop gvfs-mtp brightnessctl obs-studio bluez bluez-utils blueman gtk3 gtk4 dunst qt6-svg qt6-declarative rofi-wayland bash-completion gnome-calculator telegram-desktop eog evince qbittorrent nm-connection-editor qt5 qt6 vlc mpv yt-dlp wine gnome-disk-utility openshot ntfsprogs inkscape spotify-launcher plocate man net-tools dhclient bind traceroute ttf-droid otf-droid-nerd ttf-nerd-fonts-symbols rofimoji noto-fonts-emoji wtype bat tree jdk-openjdk hyprlock hypridle ffmpegthumbnailer scrcpy gnome-keyring helvum android-tools"
-    aur_packages=brave-bin firefox-beta-bin visual-studio-code-bin hyprpicker hyprshot hyprpaper wlogout bottles ani-cli webcord hyprsunset sddm-theme-catppuccin android-sdk-platform-tools github-desktop dracula-cursors-git dracula-icons-git cloudflare-warp-bin
+    base_packages="base-devel dosfstools grub efibootmgr mtools wireless_tools sudo linux linux-headers pipewire-pulse networkmanager linux-firmware linux-lts linux-lts-headers nano starship unzip wpa_supplicant dialog os-prober kitty hyprland ripgrep nautilus waybar firefox sddm git neovim nwg-look qt5ct qt6ct qt5-wayland xdg-desktop-portal-hyprland python-virtualenv audacity python-pipenv pipewire wireplumber qt6-wayland gimp hyprpolkitagent gnome-text-editor libreoffice-fresh sonic-visualiser yazi figlet fastfetch htop btop gvfs-mtp brightnessctl obs-studio bluez bluez-utils blueman gtk3 gtk4 dunst qt6-svg qt6-declarative rofi-wayland bash-completion gnome-calculator telegram-desktop eog evince qbittorrent nm-connection-editor qt5 qt6 vlc mpv yt-dlp wine gnome-disk-utility openshot ntfsprogs inkscape spotify-launcher plocate man net-tools dhclient bind traceroute ttf-droid otf-droid-nerd ttf-nerd-fonts-symbols rofimoji noto-fonts-emoji wtype bat tree jdk-openjdk hyprlock hypridle ffmpegthumbnailer scrcpy gnome-keyring helvum android-tools ttf-dejavu ifuse libimobiledevice usbmuxd gvfs-afc remmina qemu libvirt virt-manager edk2-ovmf dnsmasq vde2 bridge-utils"
+    aur_packages=brave-bin firefox-beta-bin visual-studio-code-bin hyprpicker hyprshot hyprpaper wlogout bottles ani-cli webcord hyprsunset sddm-theme-catppuccin android-sdk-platform-tools github-desktop dracula-cursors-git dracula-icons-git cloudflare-warp-bin google-earth-pro
     ;;
   *)
     echo "Invalid (Minimal)"
-    base_packages="base-devel dosfstools grub efibootmgr mtools wireless_tools sudo linux linux-headers pipewire-pulse networkmanager linux-firmware linux-lts linux-lts-headers nano starship unzip wpa_supplicant dialog os-prober kitty hyprland ripgrep nautilus waybar sddm git neovim nwg-look qt5ct qt6ct qt5-wayland xdg-desktop-portal-hyprland python-virtualenv python-pipenv pipewire wireplumber qt6-wayland hyprpolkitagent yazi figlet fastfetch htop btop gvfs-mtp brightnessctl bluez bluez-utils blueman gtk3 gtk4 dunst qt6-svg qt6-declarative rofi-wayland bash-completion eog evince nm-connection-editor qt5 qt6 vlc mpv yt-dlp wine gnome-disk-utility ntfsprogs plocate man net-tools dhclient bind traceroute ttf-droid otf-droid-nerd ttf-nerd-fonts-symbols rofimoji noto-fonts-emoji wtype bat tree jdk-openjdk hyprlock hypridle ffmpegthumbnailer scrcpy gnome-keyring helvum android-tools"
+    base_packages="base-devel dosfstools grub efibootmgr mtools wireless_tools sudo linux linux-headers pipewire-pulse networkmanager linux-firmware linux-lts linux-lts-headers nano starship unzip wpa_supplicant dialog os-prober kitty hyprland ripgrep nautilus waybar sddm git neovim nwg-look qt5ct qt6ct qt5-wayland xdg-desktop-portal-hyprland python-virtualenv python-pipenv pipewire wireplumber qt6-wayland hyprpolkitagent yazi figlet fastfetch htop btop gvfs-mtp brightnessctl bluez bluez-utils blueman gtk3 gtk4 dunst qt6-svg qt6-declarative rofi-wayland bash-completion eog evince nm-connection-editor qt5 qt6 vlc mpv yt-dlp wine gnome-disk-utility ntfsprogs plocate man net-tools dhclient bind traceroute ttf-droid otf-droid-nerd ttf-nerd-fonts-symbols rofimoji noto-fonts-emoji wtype bat tree jdk-openjdk hyprlock hypridle ffmpegthumbnailer scrcpy gnome-keyring helvum android-tools ttf-dejavu ifuse libimobiledevice usbmuxd gvfs-afc"
     aur_packages=hyprpicker hyprshot hyprpaper wlogout ani-cli hyprsunset sddm-theme-catppuccin android-sdk-platform-tools dracula-cursors-git dracula-icons-git
     ;;
 esac
@@ -97,6 +97,7 @@ echo "2) No"
 read -rp "Enter choice [1/2]: " cybersec_choice
 
 cybersec_packages=""
+cybersec_aur=""
 case $cybersec_choice in 
   1)
     echo "Cybersec Packages will be installed"
@@ -104,15 +105,18 @@ case $cybersec_choice in
     chmod +x strap.sh
     ./strap.sh
     pacman -Syu --noconfirm
-    cybersec_packages="wireshark-qt wireshark-cli virtualbox virtualbox-host-modules-dkms nmap"
+    cybersec_packages="nuclei gf gau amass httpx dirsearch eyewitness retire trufflehog gitrob altdns sublist3r recon-ng seclists ffuf sherlock netcat whois openvpn wireshark-qt wireshark-cli nmap subfinder gobuster"
+    cybersec_aur="caido-desktop rockyou hakrawler-git"
     ;;
   2)
     echo "No cybersec packages will be installed"
     cybersec_packages=""
+    cybersec_aur=""
     ;;
   *)
     echo "Invalid (no cybersec packages will be installed)"
     cybersec_packages=""
+    cybersec_aur=""
     ;;
 esac
 
@@ -133,7 +137,7 @@ rm -rf yay
 echo "-----------------------------------"
 echo "----- Installing AUR packages -----"
 echo "-----------------------------------"
-yay -S $aur_packages 
+yay -S $aur_packages $cybersec_aur
 
 echo "----------------------------"
 echo "----- Getting Dotfiles -----"
@@ -158,6 +162,8 @@ sudo systemctl enable NetworkManager.service
 sudo systemctl enable sddm.service 
 sudo systemctl enable bluetooth.service
 sudo systemctl enable systemd-timesyncd.service
+sudo systemctl enable libvirtd.service
+sudo usermod -aG libvirt "$USER"
 
 echo "Cleaning up post-install scripts..."
 rm -f ~/post.sh

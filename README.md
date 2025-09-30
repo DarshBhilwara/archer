@@ -46,4 +46,5 @@ poweroff
 - Brave://flags and turn on ozone wayland
 - Make swap file(size=ram+2)  <https://www.youtube.com/watch?v=HSbBl31ohjE>
 - Set color theme (currently using kanagawa and dracula combined).
-
+- Install some more cybersec tools - commonspeak2, burpsuite
+- Set up nvidia
