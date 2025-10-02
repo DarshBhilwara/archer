@@ -79,11 +79,7 @@ mount "$ROOT" /mnt
 mkdir -p /mnt/{boot,home}
 mount "$BOOT" /mnt/boot
 mount "$HOME" /mnt/home
-fallocate -l 10G /mnt/swapfile
-chmod 600 /mnt/swapfile
-mkswap /mnt/swapfile
-swapon /mnt/swapfile
-echo '/swapfile none swap sw 0 0' >> /mnt/etc/fstab
+
 
 echo "--------------------------------------"
 echo "----- Installing Base Arch Linux -----"
@@ -93,7 +89,18 @@ pacstrap /mnt base git vim sudo --noconfirm --needed
 echo "----------------------------"
 echo "----- Generating fstab -----"
 echo "----------------------------"
-genfstab -U /mnt >> /mnt/etc/fstab
+genfstab -U /mnt > /mnt/etc/fstab
+
+echo "---------------------------"
+echo "----- Generating swap -----"
+echo "---------------------------"
+arch-chroot /mnt bash -c "
+fallocate -l 10G /swapfile
+chmod 600 /swapfile
+mkswap /swapfile
+swapon /swapfile
+echo '/swapfile none swap sw 0 0' >> /etc/fstab
+"
 
 arch-chroot /mnt systemctl daemon-reexec || true
 
