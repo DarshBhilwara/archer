@@ -116,9 +116,10 @@ sudo systemctl enable libvirtd.service
 sudo usermod -aG libvirt "$USER"
 
 echo "Cleaning up post-install scripts..."
-rm -f ~/post.sh
-sudo rm -f /root/user.sh
+#rm -f ~/post.sh
+#sudo rm -f /root/user.sh
 
-echo ''
-echo "Install complete. You should reboot and read the README file for further instructions."
-echo ''
+
+#echo ''
+#echo "Install complete. You should reboot and read the README file for further instructions."
+#echo ''
