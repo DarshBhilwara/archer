@@ -79,6 +79,11 @@ mount "$ROOT" /mnt
 mkdir -p /mnt/{boot,home}
 mount "$BOOT" /mnt/boot
 mount "$HOME" /mnt/home
+fallocate -l 10G /mnt/swapfile
+chmod 600 /mnt/swapfile
+mkswap /mnt/swapfile
+swapon /mnt/swapfile
+echo '/swapfile none swap sw 0 0' >> /mnt/etc/fstab
 
 echo "--------------------------------------"
 echo "----- Installing Base Arch Linux -----"
