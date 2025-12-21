@@ -13,38 +13,51 @@ Create a bootable usb with arch installation image from <https://archlinux.org/d
 - iwctl station {device name} connect {wifi name} 
 
 ## Installing the System
-```
+```bash
 pacman -Sy git
 git clone https://github.com/DarshBhilwara/archer.git
 cd archer
 chmod +x base.sh
 ./base.sh
 ```
-## Suggested disk setup for 1tb drive
-- 2GB EFI System for EFI
-- 2GB Linux Filesystem for boot
-- 180GB Linux Filesystem for root
-- rest Linux Filesystem for home
+## Suggested disk setup for a single 1tb drive
+- 2GB for EFI
+- 2GB for boot
+- 180GB for root
 
-## After base.sh is executed
-```
-cd
-./post.sh
-```
+## Suggest disk setup for multiple disks
+### First Disk
+- 2GB for EFI
+- 2GB for boot
+- Rest for Root
+### Second Disk
+- Full for home
+### Other disks
+- Will be mounted on /mnt
 
-## After post.sh is excuted
-```
-exit
-exit
-exit
+## After base.sh
+```bash
 exit
 umount -a
-poweroff
+reboot
+```
+
+## After reboot
+- Now your base Archlinux is installed
+- For GUI and other packages and settings, you need to install `post.sh`
+- First connect to internet using `nmtui`
+```bash
+mkdir .config
+cd .config
+git clone https://github.com/DarshBhilwara/archer.git
+cd archer
+chmod +x post.sh
+./post.sh 
 ```
 
 ## Miscellaneous
+- For checking system binds and softwares, you can see them in .config
 - Brave://flags and turn on ozone wayland
 - Make swap file(size=ram+2)  <https://www.youtube.com/watch?v=HSbBl31ohjE>
 - Set color theme (currently using kanagawa and dracula combined).
 - Install some more cybersec tools - commonspeak2, burpsuite
-- Set up nvidia

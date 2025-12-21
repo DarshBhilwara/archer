@@ -1,15 +1,66 @@
 #!/usr/bin/env bash
+
+cat <<'EOF'
+
+                                                                                                      
+         .8.          8 888888888o.      ,o888888o.    8 8888        8 8 8888888888   8 888888888o.   
+        .888.         8 8888    `88.    8888     `88.  8 8888        8 8 8888         8 8888    `88.  
+       :88888.        8 8888     `88 ,8 8888       `8. 8 8888        8 8 8888         8 8888     `88  
+      . `88888.       8 8888     ,88 88 8888           8 8888        8 8 8888         8 8888     ,88  
+     .8. `88888.      8 8888.   ,88' 88 8888           8 8888        8 8 888888888888 8 8888.   ,88'  
+    .8`8. `88888.     8 888888888P'  88 8888           8 8888        8 8 8888         8 888888888P'   
+   .8' `8. `88888.    8 8888`8b      88 8888           8 8888888888888 8 8888         8 8888`8b       
+  .8'   `8. `88888.   8 8888 `8b.    `8 8888       .8' 8 8888        8 8 8888         8 8888 `8b.     
+ .888888888. `88888.  8 8888   `8b.     8888     ,88'  8 8888        8 8 8888         8 8888   `8b.   
+.8'       `8. `88888. 8 8888     `88.    `8888888P'    8 8888        8 8 888888888888 8 8888     `88. 
+
+EOF
+
 set -Eeuo pipefail
 trap 'echo "Error at line $LINENO: command failed." >&2; exit 1' ERR
 
 cd "$HOME"
-mkdir -p "$HOME"/.config
+
+echo "----------------------------"
+echo "----- Swap File Setup -----"
+echo "----------------------------"
+
+read -rp "Do you want to create a swap file? [Y/n]: " CREATE_SWAP
+CREATE_SWAP=${CREATE_SWAP,,}
+CREATE_SWAP=${CREATE_SWAP:-y}
+
+if [[ "$CREATE_SWAP" == "y" || "$CREATE_SWAP" == "yes" ]]; then
+  echo "Suggested swap size: RAM + 2G (example: 18G for 16G RAM)"
+  read -rp "Enter swap size (e.g. 8G, 16G, 18G): " SWAP_SIZE
+
+  if [[ -z "$SWAP_SIZE" ]]; then
+    echo "No swap size entered, skipping swap setup."
+  elif [[ -f /swapfile ]]; then
+    echo "/swapfile already exists, skipping creation."
+  else
+    echo "Creating swapfile of size $SWAP_SIZE..."
+
+    sudo fallocate -l "$SWAP_SIZE" /swapfile
+    sudo chmod 600 /swapfile
+    sudo mkswap /swapfile
+    sudo swapon /swapfile
+
+    echo "/swapfile none swap defaults 0 0" | sudo tee -a /etc/fstab
+  fi
+else
+  echo "Skipping swap file setup."
+fi
+
+
+echo "-------------------------"
+echo "----- System Update -----"
+echo "-------------------------"
+sudo pacman -Syu 
+
 
 echo "-------------------------------"
-echo "----- Installing Packages -----"
+echo "----- CPU Microcode -----"
 echo "-------------------------------"
-sudo pacman -Syyu --noconfirm
-
 echo "Select your CPU type:"
 echo "1) Intel"
 echo "2) AMD"
@@ -24,6 +75,9 @@ case "$ucode_choice" in
   *) echo "Invalid -> skipping microcode." ;;
 esac
 
+echo "-----------------------"
+echo "----- GPU Drivers -----"
+echo "-----------------------"
 echo "Select your GPU type:"
 echo "1) Intel"
 echo "2) NVIDIA"
@@ -34,7 +88,7 @@ read -rp "Enter number [1-4]: " gpu
 gpu_packages=""
 case "$gpu" in
   1) gpu_packages="mesa xf86-video-intel vulkan-intel" ;;
-  2) gpu_packages="nvidia nvidia-utils nvidia-settings nvidia-lts linux-firmware-nvidia" ;;
+  2) gpu_packages="nvidia-open nvidia-open-lts nvidia-utils nvidia-settings linux-firmware-nvidia" ;;
   3) gpu_packages="mesa xf86-video-amdgpu vulkan-radeon" ;;
   4) gpu_packages="" ;;
   *) echo "Invalid -> no GPU drivers." ;;
@@ -46,11 +100,11 @@ echo "2) Minimal"
 read -rp "Enter choice [1/2]: " full_min
 
 if [[ "$full_min" == "1" ]]; then
-  base_packages="base-devel dosfstools grub efibootmgr mtools wireless_tools sudo linux linux-headers pipewire-pulse networkmanager linux-firmware linux-lts linux-lts-headers nano starship unzip wpa_supplicant dialog os-prober kitty hyprland ripgrep nautilus waybar firefox sddm git neovim nwg-look qt5ct qt6ct qt5-wayland xdg-desktop-portal-hyprland python-virtualenv audacity python-pipenv pipewire wireplumber qt6-wayland gimp hyprpolkitagent gnome-text-editor libreoffice-fresh sonic-visualiser yazi figlet fastfetch htop btop gvfs-mtp brightnessctl obs-studio bluez bluez-utils blueman gtk3 gtk4 dunst qt6-svg qt6-declarative rofi-wayland bash-completion gnome-calculator telegram-desktop eog evince qbittorrent nm-connection-editor qt5 qt6 vlc mpv yt-dlp wine gnome-disk-utility openshot ntfsprogs inkscape spotify-launcher plocate man net-tools dhclient bind traceroute ttf-droid otf-droid-nerd ttf-nerd-fonts-symbols rofimoji noto-fonts-emoji wtype bat tree jdk-openjdk hyprlock hypridle ffmpegthumbnailer scrcpy gnome-keyring helvum android-tools ttf-dejavu ifuse libimobiledevice usbmuxd gvfs-afc remmina qemu libvirt virt-manager edk2-ovmf dnsmasq vde2 bridge-utils"
-  aur_packages="brave-bin firefox-beta-bin visual-studio-code-bin hyprpicker hyprshot hyprpaper wlogout bottles ani-cli webcord hyprsunset sddm-theme-catppuccin android-sdk-platform-tools github-desktop dracula-cursors-git dracula-icons-git cloudflare-warp-bin google-earth-pro"
+  base_packages="wireless_tools pipewire-pulse nano starship unzip wpa_supplicant dialog kitty hyprland ripgrep nautilus waybar firefox neovim nwg-look qt5ct qt6ct qt5-wayland xdg-desktop-portal-hyprland python-virtualenv audacity python-pipenv pipewire wireplumber qt6-wayland gimp hyprpolkitagent gnome-text-editor texlive libreoffice-fresh sonic-visualiser yazi figlet fastfetch htop btop gvfs-mtp brightnessctl bluez bluez-utils blueman gtk3 gtk4 dunst qt6-svg qt6-declarative rofi-wayland bash-completion gnome-calculator telegram-desktop eog evince qbittorrent nm-connection-editor qt5 qt6 vlc mpv yt-dlp wine gnome-disk-utility openshot ntfsprogs inkscape spotify-launcher plocate man net-tools dhclient bind traceroute ttf-droid otf-droid-nerd ttf-nerd-fonts-symbols rofimoji noto-fonts-emoji wtype bat tree jdk-openjdk hyprlock hypridle ffmpegthumbnailer scrcpy gnome-keyring helvum android-tools ttf-dejavu ifuse libimobiledevice usbmuxd gvfs-afc remmina qemu libvirt virt-manager edk2-ovmf dnsmasq vde2 bridge-utils nwg-displays "
+  aur_packages="brave-bin firefox-beta-bin visual-studio-code-bin hyprpicker hyprshot hyprpaper wlogout bottles ani-cli webcord hyprsunset android-sdk-platform-tools github-desktop dracula-cursors-git dracula-icons-git cloudflare-warp-bin google-earth-pro"
 else
-  base_packages="base-devel dosfstools grub efibootmgr mtools wireless_tools sudo linux linux-headers pipewire-pulse networkmanager linux-firmware linux-lts linux-lts-headers nano starship unzip wpa_supplicant dialog os-prober kitty hyprland ripgrep nautilus waybar sddm git neovim nwg-look qt5ct qt6ct qt5-wayland xdg-desktop-portal-hyprland python-virtualenv python-pipenv pipewire wireplumber qt6-wayland hyprpolkitagent yazi figlet fastfetch htop btop gvfs-mtp brightnessctl bluez bluez-utils blueman gtk3 gtk4 dunst qt6-svg qt6-declarative rofi-wayland bash-completion eog evince nm-connection-editor qt5 qt6 vlc mpv yt-dlp wine gnome-disk-utility ntfsprogs plocate man net-tools dhclient bind traceroute ttf-droid otf-droid-nerd ttf-nerd-fonts-symbols rofimoji noto-fonts-emoji wtype bat tree jdk-openjdk hyprlock hypridle ffmpegthumbnailer scrcpy gnome-keyring helvum android-tools ttf-dejavu ifuse libimobiledevice usbmuxd gvfs-afc"
-  aur_packages="hyprpicker hyprshot hyprpaper wlogout ani-cli hyprsunset sddm-theme-catppuccin android-sdk-platform-tools dracula-cursors-git dracula-icons-git"
+  base_packages="base-devel dosfstools grub efibootmgr mtools wireless_tools sudo linux linux-headers pipewire-pulse networkmanager linux-firmware linux-lts linux-lts-headers nano starship unzip wpa_supplicant dialog os-prober kitty hyprland ripgrep nautilus waybar git neovim nwg-look qt5ct qt6ct qt5-wayland xdg-desktop-portal-hyprland python-virtualenv python-pipenv pipewire wireplumber qt6-wayland hyprpolkitagent yazi figlet fastfetch htop btop gvfs-mtp brightnessctl bluez bluez-utils blueman gtk3 gtk4 dunst qt6-svg qt6-declarative rofi-wayland bash-completion eog evince nm-connection-editor qt5 qt6 vlc mpv yt-dlp wine gnome-disk-utility ntfsprogs plocate man net-tools dhclient bind traceroute ttf-droid otf-droid-nerd ttf-nerd-fonts-symbols rofimoji noto-fonts-emoji wtype bat tree jdk-openjdk hyprlock hypridle ffmpegthumbnailer scrcpy gnome-keyring helvum android-tools ttf-dejavu ifuse libimobiledevice usbmuxd gvfs-afc nwg-displays"
+  aur_packages="hyprpicker hyprshot hyprpaper wlogout ani-cli hyprsunset android-sdk-platform-tools dracula-cursors-git dracula-icons-git"
 fi
 
 echo "Do you want to install cybersecurity tools?"
@@ -66,7 +120,7 @@ if [[ "$cybersec_choice" == "1" ]]; then
   ./strap.sh || { echo "Error: BlackArch bootstrap failed"; exit 1; }
   pacman -Syu --noconfirm
   cybersec_packages="nuclei gf gau amass httpx dirsearch eyewitness retire trufflehog gitrob altdns sublist3r recon-ng seclists ffuf sherlock netcat whois openvpn wireshark-qt wireshark-cli nmap subfinder gobuster"
-  cybersec_aur="caido-desktop rockyou hakrawler-git"
+  cybersec_aur="burpsuite caido-desktop rockyou hakrawler-git"
 else
   echo "No cybersec packages will be installed."
 fi
@@ -108,18 +162,11 @@ fi
 echo "-----------------------------"
 echo "----- Enabling Services -----"
 echo "-----------------------------"
-sudo systemctl enable NetworkManager.service 
-sudo systemctl enable sddm.service 
 sudo systemctl enable bluetooth.service 
-sudo systemctl enable systemd-timesyncd.service
 sudo systemctl enable libvirtd.service
 sudo usermod -aG libvirt "$USER"
 
-echo "Cleaning up post-install scripts..."
-#rm -f ~/post.sh
-#sudo rm -f /root/user.sh
+echo ""
+echo ""
+echo "Install complete. You should reboot and read the README file for further instructions."
 
-
-#echo ''
-#echo "Install complete. You should reboot and read the README file for further instructions."
-#echo ''

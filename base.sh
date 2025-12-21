@@ -64,7 +64,6 @@ echo "Extra disks selected: ${EXTRA_DISKS[*]}"
 
 read -rp "Enter username: " USERNAME
 read -rp "Enter full name: " FULLNAME
-read -rp "Enter hostname (e.g. arch): " HOSTNAME
 read -rsp "Enter password (same for root & user): " PASSWORD
 echo
 read -rsp "Confirm password: " PASSWORD_CONFIRM
@@ -74,6 +73,7 @@ if [[ "$PASSWORD" != "$PASSWORD_CONFIRM" ]]; then
   echo "Passwords do not match"
   exit 1
 fi
+read -rp "Enter hostname (e.g. arch): " HOSTNAME
 
 echo "Wiping and partitioning $DISK..."
 wipefs -a "$DISK"
@@ -184,7 +184,7 @@ done
 echo "--------------------------------------"
 echo "----- Installing Base Arch Linux -----"
 echo "--------------------------------------"
-pacstrap /mnt base git vim linux linux-headers linux-lts linux-lts-headers linux-firmware sudo networkmanager grub efibootmgr dosfstools mtools --noconfirm --needed
+pacstrap /mnt base git base-devel vim linux linux-headers linux-lts linux-lts-headers linux-firmware sudo networkmanager grub efibootmgr dosfstools mtools --noconfirm --needed
 
 echo "----------------------------"
 echo "----- Generating fstab -----"
@@ -238,10 +238,11 @@ echo "-----------------------------------"
 grub-install --target=x86_64-efi --efi-directory=/boot/EFI --bootloader-id=GRUB --recheck
 grub-mkconfig -o /boot/grub/grub.cfg
 
-echo "-----------------------------------"
-echo "----- Enabling NetworkManager -----"
-echo "-----------------------------------"
+echo "------------------------------------------"
+echo "----- Enabling Network and Time Sync -----"
+echo "------------------------------------------"
 systemctl enable NetworkManager
+systemctl enable systemd-timesyncd
 CHROOT
 
 
