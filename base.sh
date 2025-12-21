@@ -12,12 +12,15 @@ fi
 echo "This will erase all data on $DISK!"
 read -rp "Type YES to continue: " CONFIRM
 [[ "$CONFIRM" == "YES" ]] || exit 1
+
 read -rp "Enter EFI partition size (e.g., 512M): " EFI_SIZE
 read -rp "Enter Boot partition size (e.g., 1G): " BOOT_SIZE
 read -rp "Enter Root(/) partition size (e.g., 30G): " ROOT_SIZE
+
 EXTRA_DISKS=()
 read -rp "Do you want to setup additional disks? [y/N]: " ADD_DISKS
 ADD_DISKS=${ADD_DISKS,,}
+
 if [[ "$ADD_DISKS" == "y" || "$ADD_DISKS" == "yes" ]]; then
   while true; do
     read -rp "Enter extra disk (e.g. /dev/sdb, /dev/nvme1n1) or press Enter to finish: " DISK_INPUT
@@ -106,7 +109,9 @@ echo "-------------------------------"
 mkfs.fat -F32 "$EFI"
 mkfs.ext4 -F "$BOOT"
 mkfs.ext4 -F "$ROOT"
-mkfs.ext4 -F "$HOME"
+if [[ "${#EXTRA_DISKS[@]}" -eq 0 ]]; then
+  mkfs.ext4 -F "$HOME"
+fi
 
 echo "--------------------"
 echo "----- Mounting -----"
@@ -114,13 +119,16 @@ echo "--------------------"
 mount "$ROOT" /mnt
 mkdir -p /mnt/{boot,home}
 mount "$BOOT" /mnt/boot
-mount "$HOME" /mnt/home
 mkdir -p /mnt/boot/EFI
 mount "$EFI" /mnt/boot/EFI
 
-for EXTRA_DISK in "${EXTRA_DISKS[@]}"; do
-  echo "Setting up $EXTRA_DISK..."
+if [[ "${#EXTRA_DISKS[@]}" -eq 0 ]]; then
+  mount "$HOME" /mnt/home
+fi
 
+HOME_SET=false
+
+for EXTRA_DISK in "${EXTRA_DISKS[@]}"; do
   wipefs -a "$EXTRA_DISK"
   sgdisk --zap-all "$EXTRA_DISK"
 
@@ -143,13 +151,14 @@ EOF
 
   mkfs.ext4 -F "$PART"
 
-  DISK_NAME=$(basename "$EXTRA_DISK")
-  MOUNT_POINT="/mnt/mnt/$DISK_NAME"
-
-  mkdir -p "$MOUNT_POINT"
-  mount "$PART" "$MOUNT_POINT"
-
-  echo "Mounted $PART at $MOUNT_POINT"
+  if [[ "$HOME_SET" == false ]]; then
+    mount "$PART" /mnt/home
+    HOME_SET=true
+  else
+    DISK_NAME=$(basename "$EXTRA_DISK")
+    mkdir -p "/mnt/mnt/$DISK_NAME"
+    mount "$PART" "/mnt/mnt/$DISK_NAME"
+  fi
 done
 
 echo "--------------------------------------"
@@ -223,24 +232,3 @@ echo ""
 echo "Base Install Complete!"
 echo "Please see the further instructions in the README file."
 
-# echo "---------------------------"
-# echo "----- Generating swap -----"
-# echo "---------------------------"
-# arch-chroot /mnt bash -c "
-# fallocate -l 10G /swapfile
-# chmod 600 /swapfile
-# mkswap /swapfile
-# swapon /swapfile
-# echo '/swapfile none swap sw 0 0' >> /etc/fstab
-# "
-
-# arch-chroot /mnt systemctl daemon-reexec || true
-
-# cp user.sh post.sh /mnt/root/
-# chmod +x /mnt/root/{user.sh,post.sh}
-# echo "$EFI" > /mnt/root/.efi_partition
-
-# echo "---------------------------"
-# echo "----- Going to chroot -----"
-# echo "---------------------------"
-# arch-chroot /mnt /root/user.sh
