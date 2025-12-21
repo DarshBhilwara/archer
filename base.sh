@@ -34,8 +34,6 @@ read -rp "Enter EFI partition size (e.g., 512M): " EFI_SIZE
 read -rp "Enter Boot partition size (e.g., 1G): " BOOT_SIZE
 read -rp "Enter Root(/) partition size (e.g., 30G) or leave empty if you have multiple disks: " ROOT_SIZE
 
-[[ -z "$ROOT_SIZE" ]] && { echo "Root size cannot be empty"; exit 1; }
-
 EXTRA_DISKS=()
 read -rp "Do you want to setup additional disks? [y/N]: " ADD_DISKS
 ADD_DISKS=${ADD_DISKS,,}
@@ -95,11 +93,10 @@ n
 +${BOOT_SIZE}
 n
 3
-
+${ROOT_SIZE:+
 +${ROOT_SIZE}
 n
-4
-
+4}
 
 w
 EOF
@@ -130,7 +127,8 @@ echo "-------------------------------"
 mkfs.fat -F32 "$EFI"
 mkfs.ext4 -F "$BOOT"
 mkfs.ext4 -F "$ROOT"
-if [[ "${#EXTRA_DISKS[@]}" -eq 0 ]]; then
+
+if [[ -n "$ROOT_SIZE" || "${#EXTRA_DISKS[@]}" -eq 0 ]]; then
   mkfs.ext4 -F "$HOME"
 fi
 
@@ -143,7 +141,7 @@ mount "$BOOT" /mnt/boot
 mkdir -p /mnt/boot/EFI
 mount "$EFI" /mnt/boot/EFI
 
-if [[ "${#EXTRA_DISKS[@]}" -eq 0 ]]; then
+if [[ -n "$ROOT_SIZE" || "${#EXTRA_DISKS[@]}" -eq 0 ]]; then
   mount "$HOME" /mnt/home
 fi
 
@@ -172,7 +170,7 @@ EOF
 
   mkfs.ext4 -F "$PART"
 
-  if [[ "$HOME_SET" == false ]]; then
+  if [[ "$HOME_SET" == false && -z "$ROOT_SIZE" ]]; then
     mkdir -p /mnt/home
     mount "$PART" /mnt/home
     HOME_SET=true
@@ -196,8 +194,6 @@ genfstab -U /mnt > /mnt/etc/fstab
 echo "-------------------------------------------"
 echo "----- Chrooting for Setting up System -----"
 echo "-------------------------------------------"
-set -Eeuo pipefail
-trap 'echo "Error at line $LINENO"; exit 1' ERR
 arch-chroot /mnt bash <<CHROOT
 
 
