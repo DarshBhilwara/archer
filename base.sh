@@ -1,4 +1,21 @@
 #!/usr/bin/env bash
+
+cat <<'EOF'
+
+                                                                                                      
+         .8.          8 888888888o.      ,o888888o.    8 8888        8 8 8888888888   8 888888888o.   
+        .888.         8 8888    `88.    8888     `88.  8 8888        8 8 8888         8 8888    `88.  
+       :88888.        8 8888     `88 ,8 8888       `8. 8 8888        8 8 8888         8 8888     `88  
+      . `88888.       8 8888     ,88 88 8888           8 8888        8 8 8888         8 8888     ,88  
+     .8. `88888.      8 8888.   ,88' 88 8888           8 8888        8 8 888888888888 8 8888.   ,88'  
+    .8`8. `88888.     8 888888888P'  88 8888           8 8888        8 8 8888         8 888888888P'   
+   .8' `8. `88888.    8 8888`8b      88 8888           8 8888888888888 8 8888         8 8888`8b       
+  .8'   `8. `88888.   8 8888 `8b.    `8 8888       .8' 8 8888        8 8 8888         8 8888 `8b.     
+ .888888888. `88888.  8 8888   `8b.     8888     ,88'  8 8888        8 8 8888         8 8888   `8b.   
+.8'       `8. `88888. 8 8888     `88.    `8888888P'    8 8888        8 8 888888888888 8 8888     `88. 
+
+EOF
+
 set -Eeuo pipefail
 trap 'echo "Error at line $LINENO"; exit 1' ERR
 
@@ -15,7 +32,9 @@ read -rp "Type YES to continue: " CONFIRM
 
 read -rp "Enter EFI partition size (e.g., 512M): " EFI_SIZE
 read -rp "Enter Boot partition size (e.g., 1G): " BOOT_SIZE
-read -rp "Enter Root(/) partition size (e.g., 30G): " ROOT_SIZE
+read -rp "Enter Root(/) partition size (e.g., 30G) or leave empty if you have multiple disks: " ROOT_SIZE
+
+[[ -z "$ROOT_SIZE" ]] && { echo "Root size cannot be empty"; exit 1; }
 
 EXTRA_DISKS=()
 read -rp "Do you want to setup additional disks? [y/N]: " ADD_DISKS
@@ -44,6 +63,7 @@ if [[ "$ADD_DISKS" == "y" || "$ADD_DISKS" == "yes" ]]; then
   done
 fi
 echo "Extra disks selected: ${EXTRA_DISKS[*]}"
+
 read -rp "Enter username: " USERNAME
 read -rp "Enter full name: " FULLNAME
 read -rp "Enter hostname (e.g. arch): " HOSTNAME
@@ -56,6 +76,7 @@ if [[ "$PASSWORD" != "$PASSWORD_CONFIRM" ]]; then
   echo "Passwords do not match"
   exit 1
 fi
+
 echo "Wiping and partitioning $DISK..."
 wipefs -a "$DISK"
 sgdisk --zap-all "$DISK"
@@ -152,6 +173,7 @@ EOF
   mkfs.ext4 -F "$PART"
 
   if [[ "$HOME_SET" == false ]]; then
+    mkdir -p /mnt/home
     mount "$PART" /mnt/home
     HOME_SET=true
   else
@@ -176,7 +198,7 @@ echo "----- Chrooting for Setting up System -----"
 echo "-------------------------------------------"
 set -Eeuo pipefail
 trap 'echo "Error at line $LINENO"; exit 1' ERR
-arch-chroot /mnt bash <<EOF
+arch-chroot /mnt bash <<CHROOT
 
 
 echo "---------------------------"
@@ -208,11 +230,11 @@ echo "----- Hostname -----"
 echo "--------------------"
 
 echo "$HOSTNAME" > /etc/hostname
-cat <<EOF >/etc/hosts
+cat <<HOSTS >/etc/hosts
 127.0.0.1   localhost
 ::1         localhost
 127.0.1.1   $HOSTNAME.localdomain $HOSTNAME
-EOF
+HOSTS
 
 echo "-----------------------------------"
 echo "----- Bootloader Installation -----"
@@ -224,11 +246,10 @@ echo "-----------------------------------"
 echo "----- Enabling NetworkManager -----"
 echo "-----------------------------------"
 systemctl enable NetworkManager
-EOF
+CHROOT
 
 
 echo ""
 echo ""
 echo "Base Install Complete!"
 echo "Please see the further instructions in the README file."
-
