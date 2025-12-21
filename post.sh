@@ -118,14 +118,14 @@ if [[ "$cybersec_choice" == "1" ]]; then
   curl -fsSL -O https://blackarch.org/strap.sh
   chmod +x strap.sh
   ./strap.sh || { echo "Error: BlackArch bootstrap failed"; exit 1; }
-  pacman -Syu --noconfirm
+  pacman -Syu
   cybersec_packages="nuclei gf gau amass httpx dirsearch eyewitness retire trufflehog gitrob altdns sublist3r recon-ng seclists ffuf sherlock netcat whois openvpn wireshark-qt wireshark-cli nmap subfinder gobuster"
   cybersec_aur="burpsuite caido-desktop rockyou hakrawler-git"
 else
   echo "No cybersec packages will be installed."
 fi
 
-sudo pacman -S --noconfirm --needed $base_packages $gpu_packages $cybersec_packages $ucode_pkg
+sudo pacman -S $base_packages $gpu_packages $cybersec_packages $ucode_pkg
 
 
 echo "------------------------------"
@@ -134,14 +134,14 @@ echo "------------------------------"
 
 git clone https://aur.archlinux.org/yay.git
 cd yay
-makepkg -si --noconfirm --needed
+makepkg -si
 cd ..
 rm -rf yay 
 
 echo "-----------------------------------"
 echo "----- Installing AUR packages -----"
 echo "-----------------------------------"
-yay -S --noconfirm --needed $aur_packages $cybersec_aur
+yay -S $aur_packages $cybersec_aur
 
 echo "----------------------------"
 echo "----- Getting Dotfiles -----"
