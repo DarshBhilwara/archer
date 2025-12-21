@@ -31,7 +31,7 @@ CREATE_SWAP=${CREATE_SWAP:-y}
 
 if [[ "$CREATE_SWAP" == "y" || "$CREATE_SWAP" == "yes" ]]; then
   echo "Suggested swap size: RAM + 2G (example: 18G for 16G RAM)"
-  read -rp "Enter swap size (e.g. 8G, 16G, 18G): " SWAP_SIZE
+  read -rp "Enter swap size : " SWAP_SIZE
 
   if [[ -z "$SWAP_SIZE" ]]; then
     echo "No swap size entered, skipping swap setup."
@@ -115,17 +115,13 @@ read -rp "Enter choice [1/2]: " cybersec_choice
 cybersec_packages=""
 cybersec_aur=""
 if [[ "$cybersec_choice" == "1" ]]; then
-  curl -fsSL -O https://blackarch.org/strap.sh
-  chmod +x strap.sh
-  ./strap.sh || { echo "Error: BlackArch bootstrap failed"; exit 1; }
-  pacman -Syu
   cybersec_packages="nuclei gf gau amass httpx dirsearch eyewitness retire trufflehog gitrob altdns sublist3r recon-ng seclists ffuf sherlock netcat whois openvpn wireshark-qt wireshark-cli nmap subfinder gobuster"
   cybersec_aur="burpsuite caido-desktop rockyou hakrawler-git"
 else
   echo "No cybersec packages will be installed."
 fi
 
-sudo pacman -S $base_packages $gpu_packages $cybersec_packages $ucode_pkg
+sudo pacman -S $base_packages $gpu_packages $ucode_pkg
 
 
 echo "------------------------------"
@@ -158,6 +154,18 @@ sudo sed -i 's/^HandlePowerKey=.*/HandlePowerKey=suspend/' /etc/systemd/logind.c
 if [[ -f /etc/spotify-launcher.conf ]]; then
     sudo sed -i 's/^#\(extra_arguments=.*--enable-features=UseOzonePlatform.*\)/\1/' /etc/spotify-launcher.conf
 fi
+
+if [[ "$cybersec_choice" == "1" ]]; then
+  echo "-------------------------------------------------"
+  echo "----- Installing Blackarch and its Packages -----"
+  echo "-------------------------------------------------"
+  curl -fsSL -O https://blackarch.org/strap.sh
+  chmod +x strap.sh
+  sudo ./strap.sh || { echo "Error: BlackArch bootstrap failed"; exit 1; }
+  sudo pacman -Syu
+  sudo pacman -S $cybersec_packages
+fi
+
 
 echo "-----------------------------"
 echo "----- Enabling Services -----"

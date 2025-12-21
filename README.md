@@ -29,7 +29,7 @@ chmod +x base.sh
 ### First Disk
 - 2GB for EFI
 - 2GB for boot
-- Rest for Root
+- Rest for root
 ### Second Disk
 - Full for home
 ### Other disks
@@ -58,6 +58,5 @@ chmod +x post.sh
 ## Miscellaneous
 - For checking system binds and softwares, you can see them in .config
 - Brave://flags and turn on ozone wayland
-- Make swap file(size=ram+2)  <https://www.youtube.com/watch?v=HSbBl31ohjE>
 - Set color theme (currently using kanagawa and dracula combined).
 - Install some more cybersec tools - commonspeak2, burpsuite
