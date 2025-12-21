@@ -155,6 +155,14 @@ if [[ -f /etc/spotify-launcher.conf ]]; then
     sudo sed -i 's/^#\(extra_arguments=.*--enable-features=UseOzonePlatform.*\)/\1/' /etc/spotify-launcher.conf
 fi
 
+
+echo "-----------------------------"
+echo "----- Enabling Services -----"
+echo "-----------------------------"
+sudo systemctl enable bluetooth.service 
+sudo systemctl enable libvirtd.service
+sudo usermod -aG libvirt "$USER"
+
 if [[ "$cybersec_choice" == "1" ]]; then
   echo "-------------------------------------------------"
   echo "----- Installing Blackarch and its Packages -----"
@@ -165,14 +173,6 @@ if [[ "$cybersec_choice" == "1" ]]; then
   sudo pacman -Syu
   sudo pacman -S $cybersec_packages
 fi
-
-
-echo "-----------------------------"
-echo "----- Enabling Services -----"
-echo "-----------------------------"
-sudo systemctl enable bluetooth.service 
-sudo systemctl enable libvirtd.service
-sudo usermod -aG libvirt "$USER"
 
 echo ""
 echo ""
