@@ -81,6 +81,7 @@ sgdisk --zap-all "$DISK"
 
 fdisk "$DISK" <<EOF
 g
+y
 n
 1
 
@@ -153,6 +154,7 @@ for EXTRA_DISK in "${EXTRA_DISKS[@]}"; do
 
   fdisk "$EXTRA_DISK" <<EOF
 g
+y
 n
 1
 
