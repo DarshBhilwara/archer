@@ -19,11 +19,10 @@ EOF
 set -Eeuo pipefail
 trap 'echo "Error at line $LINENO: command failed." >&2; exit 1' ERR
 
-cd "$HOME"
-mkdir -p ./Downloads
-mkdir -p ./Documents
-touch ./Documents/waybar.log
-touch ./Documents/waybar.log
+cd /tmp
+mkdir -p "$HOME/Downloads"
+mkdir -p "$HOME/Documents"
+touch "$HOME/Documents/waybar.log"
 
 echo "----------------------------"
 echo "----- Swap File Setup -----"
@@ -135,8 +134,6 @@ echo "------------------------------"
 git clone https://aur.archlinux.org/yay.git
 cd yay
 makepkg -si
-cd ..
-rm -rf yay 
 
 echo "-----------------------------------"
 echo "----- Installing AUR packages -----"
@@ -148,16 +145,23 @@ echo "----- Getting Dotfiles -----"
 echo "----------------------------"
 git clone https://github.com/DarshBhilwara/dotfiles.git
 cd dotfiles
-mv * "$HOME/.config/" || true
-cd ..
-rm -rf dotfiles
-echo 'source ~/.config/terminal/bashrc' >> "$HOME/.bashrc"
+cp -r .config/* "$HOME/.config/"
+echo 'source $HOME/.config/terminal/bashrc' >> "$HOME/.bashrc"
 
 sudo sed -i 's/^#HandlePowerKey=.*/HandlePowerKey=suspend/' /etc/systemd/logind.conf
 sudo sed -i 's/^HandlePowerKey=.*/HandlePowerKey=suspend/' /etc/systemd/logind.conf
 if [[ -f /etc/spotify-launcher.conf ]]; then
     sudo sed -i 's/^#\(extra_arguments=.*--enable-features=UseOzonePlatform.*\)/\1/' /etc/spotify-launcher.conf
 fi
+
+echo "------------------------------"
+echo "----- Installing wlogout -----"
+echo "------------------------------"
+git clone https://github.com/ArtsyMacaw/wlogout.git
+cd wlogout
+meson build
+ninja -C build
+sudo ninja -C build install
 
 
 echo "-----------------------------"
