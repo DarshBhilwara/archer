@@ -86,18 +86,26 @@ n
 1
 
 +${EFI_SIZE}
+y
 t
 1
 n
 2
 
 +${BOOT_SIZE}
+y
 n
 3
 ${ROOT_SIZE:+
 +${ROOT_SIZE}
+y
+
+
 n
-4}
+4
+
+
+}
 
 w
 EOF
@@ -186,6 +194,7 @@ done
 echo "--------------------------------------"
 echo "----- Installing Base Arch Linux -----"
 echo "--------------------------------------"
+pacman -Sy
 pacstrap /mnt base git base-devel vim linux linux-headers linux-lts linux-lts-headers linux-firmware sudo networkmanager grub efibootmgr dosfstools mtools --noconfirm --needed
 
 echo "----------------------------"

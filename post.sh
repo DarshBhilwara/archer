@@ -104,11 +104,11 @@ echo "2) Minimal"
 read -rp "Enter choice [1/2]: " full_min
 
 if [[ "$full_min" == "1" ]]; then
-  base_packages="wireless_tools pipewire-pulse nano starship unzip wpa_supplicant dialog kitty hyprland ripgrep nautilus waybar firefox neovim nwg-look qt5ct qt6ct qt5-wayland xdg-desktop-portal-hyprland python-virtualenv audacity python-pipenv pipewire wireplumber qt6-wayland gimp hyprpolkitagent gnome-text-editor texlive libreoffice-fresh sonic-visualiser yazi figlet fastfetch htop btop gvfs-mtp brightnessctl bluez bluez-utils blueman gtk3 gtk4 dunst qt6-svg qt6-declarative rofi-wayland bash-completion gnome-calculator telegram-desktop eog evince qbittorrent nm-connection-editor qt5 qt6 vlc mpv yt-dlp wine gnome-disk-utility ntfsprogs inkscape spotify-launcher exfat-utils plocate man net-tools dhclient bind traceroute ttf-droid otf-droid-nerd ttf-nerd-fonts-symbols rofimoji noto-fonts-emoji wtype bat tree jdk-openjdk hyprlock hypridle ffmpegthumbnailer scrcpy gnome-keyring libsecret seahorse helvum android-tools ttf-dejavu ifuse libimobiledevice usbmuxd gvfs-afc remmina qemu libvirt virt-manager edk2-ovmf dnsmasq vde2 bridge nwg-displays openfortivpn gnome-clocks tree-sitter-cli zathura zathura-pdf-mupdf gvfs-smb"
-  aur_packages="brave-bin firefox-beta-bin visual-studio-code-bin hyprpicker hyprshot hyprpaper wlogout bottles ani-cli webcord hyprsunset android-sdk-platform-tools github-desktop dracula-cursors-git dracula-icons-git cloudflare-warp-bin google-earth-pro "
+  base_packages="wireless_tools pipewire-pulse nano starship unzip wpa_supplicant dialog kitty hyprland ripgrep nautilus waybar firefox neovim nwg-look qt5ct qt6ct qt5-wayland xdg-desktop-portal-hyprland python-virtualenv audacity python-pipenv pipewire wireplumber qt6-wayland gimp hyprpolkitagent gnome-text-editor texlive libreoffice-fresh sonic-visualiser yazi figlet fastfetch htop btop gvfs-mtp brightnessctl bluez bluez-utils blueman gtk3 gtk4 dunst qt6-svg qt6-declarative rofi-wayland bash-completion gnome-calculator telegram-desktop eog evince qbittorrent nm-connection-editor qt5 qt6 vlc mpv yt-dlp wine gnome-disk-utility ntfsprogs inkscape spotify-launcher exfat-utils plocate man net-tools dhclient bind traceroute ttf-droid otf-droid-nerd ttf-nerd-fonts-symbols rofimoji noto-fonts-emoji wtype bat tree jdk-openjdk hyprlock hypridle ffmpegthumbnailer scrcpy gnome-keyring libsecret seahorse helvum android-tools ttf-dejavu ifuse libimobiledevice usbmuxd gvfs-afc remmina qemu libvirt virt-manager edk2-ovmf dnsmasq vde2 nwg-displays openfortivpn gnome-clocks tree-sitter-cli zathura zathura-pdf-mupdf gvfs-smb docker docker-compose"
+  aur_packages="brave-bin firefox-beta-bin visual-studio-code-bin hyprpicker hyprshot hyprpaper bottles stremio webcord hyprsunset android-sdk-platform-tools github-desktop dracula-cursors-git dracula-icons-git cloudflare-warp-bin google-earth-pro "
 else
   base_packages="base-devel dosfstools grub efibootmgr mtools wireless_tools sudo linux linux-headers pipewire-pulse networkmanager linux-firmware exfat-utils linux-lts linux-lts-headers nano starship unzip wpa_supplicant dialog os-prober kitty hyprland ripgrep nautilus waybar git neovim nwg-look qt5ct qt6ct qt5-wayland xdg-desktop-portal-hyprland python-virtualenv python-pipenv pipewire wireplumber qt6-wayland hyprpolkitagent yazi figlet fastfetch htop btop gvfs-mtp brightnessctl bluez bluez-utils blueman gtk3 gtk4 dunst qt6-svg qt6-declarative rofi-wayland bash-completion eog evince nm-connection-editor qt5 qt6 vlc mpv yt-dlp wine gnome-disk-utility ntfsprogs plocate man net-tools dhclient bind traceroute ttf-droid otf-droid-nerd ttf-nerd-fonts-symbols rofimoji noto-fonts-emoji wtype bat tree jdk-openjdk hyprlock hypridle ffmpegthumbnailer scrcpy gnome-keyring seahorse libsecret helvum android-tools ttf-dejavu ifuse libimobiledevice usbmuxd gvfs-afc nwg-displays openfortivpn gvfs-smb"
-  aur_packages="hyprpicker hyprshot hyprpaper wlogout ani-cli hyprsunset android-sdk-platform-tools dracula-cursors-git dracula-icons-git"
+  aur_packages="hyprpicker hyprshot hyprpaper hyprsunset android-sdk-platform-tools dracula-cursors-git dracula-icons-git"
 fi
 
 echo "Do you want to install cybersecurity tools?"
@@ -165,8 +165,9 @@ echo "----- Enabling Services -----"
 echo "-----------------------------"
 sudo systemctl enable bluetooth.service 
 sudo systemctl enable libvirtd.service
+sudo systemctl enable docker
 sudo usermod -aG libvirt "$USER"
-
+sudo usermod -aG docker "$USER"
 
 if [[ "$cybersec_choice" == "1" ]]; then
   echo "-------------------------------------------------"
