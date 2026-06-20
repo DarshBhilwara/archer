@@ -111,18 +111,18 @@ else
   aur_packages="hyprpicker hyprshot hyprpaper hyprsunset android-sdk-platform-tools dracula-cursors-git dracula-icons-git"
 fi
 
-echo "Do you want to install cybersecurity tools?"
+echo "Do you want to install development tools?"
 echo "1) Yes"
 echo "2) No"
-read -rp "Enter choice [1/2]: " cybersec_choice
+read -rp "Enter choice [1/2]: "dev_choice 
 
-cybersec_packages=""
-cybersec_aur=""
-if [[ "$cybersec_choice" == "1" ]]; then
-  cybersec_packages="nuclei gf gau amass httpx dirsearch eyewitness retire trufflehog gitrob altdns sublist3r recon-ng seclists ffuf sherlock netcat whois openvpn wireshark-qt wireshark-cli nmap subfinder gobuster caido-desktop burpsuite hakrawler"
-  cybersec_aur="rockyou"
+dev_packeges=""
+dev_aur=""
+if [[ "$dev_choice" == "1" ]]; then
+  dev_packages="nuclei gf gau amass httpx dirsearch eyewitness retire trufflehog gitrob altdns sublist3r recon-ng seclists ffuf sherlock netcat whois openvpn wireshark-qt wireshark-cli nmap subfinder gobuster caido-desktop burpsuite hakrawler cuda libnvidia-container nvidia-container-toolkit"
+  dev_aur="rockyou"
 else
-  echo "No cybersec packages will be installed."
+  echo "No development packages will be installed."
 fi
 
 sudo pacman -S $base_packages $gpu_packages $ucode_pkg
@@ -139,7 +139,7 @@ makepkg -si
 echo "-----------------------------------"
 echo "----- Installing AUR packages -----"
 echo "-----------------------------------"
-yay -S $aur_packages $cybersec_aur
+yay -S $aur_packages $dev_aur
 
 echo "----------------------------"
 echo "----- Getting Dotfiles -----"
@@ -168,13 +168,14 @@ sudo ninja -C build install
 echo "-----------------------------"
 echo "----- Enabling Services -----"
 echo "-----------------------------"
-sudo systemctl enable bluetooth.service 
-sudo systemctl enable libvirtd.service
-sudo systemctl enable docker
+sudo systemctl enable --now bluetooth.service 
+sudo systemctl enable --now libvirtd.service
+sudo systemctl enable --now docker
 sudo usermod -aG libvirt "$USER"
 sudo usermod -aG docker "$USER"
+sudo nvidia-ctk runtime configure --runtime=docker
 
-if [[ "$cybersec_choice" == "1" ]]; then
+if [[ "$dev_choice" == "1" ]]; then
   echo "-------------------------------------------------"
   echo "----- Installing Blackarch and its Packages -----"
   echo "-------------------------------------------------"
@@ -182,7 +183,7 @@ if [[ "$cybersec_choice" == "1" ]]; then
   chmod +x strap.sh
   sudo ./strap.sh || { echo "Error: BlackArch bootstrap failed"; exit 1; }
   sudo pacman -Syu
-  sudo pacman -S $cybersec_packages
+  sudo pacman -S $dev_packages
 fi
 
 echo ""
