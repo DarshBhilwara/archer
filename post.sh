@@ -104,8 +104,8 @@ read -rp "Enter choice [1/2]: " full_min
 
 if [[ "$full_min" == "1" ]]; then
   base_packages="wireless_tools pipewire-pulse nano starship unzip wpa_supplicant dialog kitty hyprland ripgrep nautilus waybar firefox neovim nwg-look qt5ct qt6ct qt5-wayland xdg-desktop-portal-hyprland python-virtualenv audacity python-pipenv pipewire wireplumber qt6-wayland gimp hyprpolkitagent gnome-text-editor texlive libreoffice-fresh sonic-visualiser yazi figlet fastfetch htop btop gvfs-mtp brightnessctl bluez bluez-utils blueman gtk3 gtk4 dunst qt6-svg qt6-declarative rofi-wayland bash-completion gnome-calculator telegram-desktop eog evince qbittorrent nm-connection-editor qt5 qt6 vlc mpv yt-dlp wine gnome-disk-utility ntfsprogs inkscape spotify-launcher exfat-utils plocate man net-tools dhclient bind traceroute ttf-droid otf-droid-nerd ttf-nerd-fonts-symbols rofimoji noto-fonts-emoji wtype bat tree jdk-openjdk hyprlock hypridle ffmpegthumbnailer scrcpy gnome-keyring libsecret seahorse helvum android-tools ttf-dejavu ifuse libimobiledevice usbmuxd gvfs-afc remmina qemu libvirt virt-manager edk2-ovmf dnsmasq vde2 nwg-displays openfortivpn gnome-clocks tree-sitter-cli zathura zathura-pdf-mupdf gvfs-smb docker docker-compose openrgb ckb-next"
-  aur_packages="brave-bin firefox-beta-bin visual-studio-code-bin hyprpicker hyprshot hyprpaper bottles stremio webcord hyprsunset android-sdk-platform-tools github-desktop dracula-cursors-git dracula-icons-git cloudflare-warp-bin google-earth-pro"
-  wget -O - https://raw.githubusercontent.com/laurent22/joplin/dev/Joplin_install_and_update.sh | bash
+  aur_packages="brave-bin firefox-beta-bin visual-studio-code-bin hyprpicker hyprshot hyprpaper webcord hyprsunset android-sdk-platform-tools github-desktop dracula-cursors-git dracula-icons-git cloudflare-warp-bin google-earth-pro"
+  
 else
   base_packages="base-devel dosfstools grub efibootmgr mtools wireless_tools sudo linux linux-headers pipewire-pulse networkmanager linux-firmware exfat-utils linux-lts linux-lts-headers nano starship unzip wpa_supplicant dialog os-prober kitty hyprland ripgrep nautilus waybar git neovim nwg-look qt5ct qt6ct qt5-wayland xdg-desktop-portal-hyprland python-virtualenv python-pipenv pipewire wireplumber qt6-wayland hyprpolkitagent yazi figlet fastfetch htop btop gvfs-mtp brightnessctl bluez bluez-utils blueman gtk3 gtk4 dunst qt6-svg qt6-declarative rofi-wayland bash-completion eog evince nm-connection-editor qt5 qt6 vlc mpv yt-dlp wine gnome-disk-utility ntfsprogs plocate man net-tools dhclient bind traceroute ttf-droid otf-droid-nerd ttf-nerd-fonts-symbols rofimoji noto-fonts-emoji wtype bat tree jdk-openjdk hyprlock hypridle ffmpegthumbnailer scrcpy gnome-keyring seahorse libsecret helvum android-tools ttf-dejavu ifuse libimobiledevice usbmuxd gvfs-afc nwg-displays openfortivpn gvfs-smb openrgb ckb-next"
   aur_packages="hyprpicker hyprshot hyprpaper hyprsunset android-sdk-platform-tools dracula-cursors-git dracula-icons-git"
@@ -114,9 +114,9 @@ fi
 echo "Do you want to install development tools?"
 echo "1) Yes"
 echo "2) No"
-read -rp "Enter choice [1/2]: "dev_choice 
+read -rp "Enter choice [1/2]: " dev_choice 
 
-dev_packeges=""
+dev_packages=""
 dev_aur=""
 if [[ "$dev_choice" == "1" ]]; then
   dev_packages="nuclei gf gau amass httpx dirsearch eyewitness retire trufflehog gitrob altdns sublist3r recon-ng seclists ffuf sherlock netcat whois openvpn wireshark-qt wireshark-cli nmap subfinder gobuster caido-desktop burpsuite hakrawler cuda libnvidia-container nvidia-container-toolkit"
@@ -139,7 +139,17 @@ makepkg -si
 echo "-----------------------------------"
 echo "----- Installing AUR packages -----"
 echo "-----------------------------------"
-yay -S $aur_packages $dev_aur
+aur_list="$aur_packages $dev_aur"
+for pkg in $aur_list; do
+    echo ""
+    echo "Installing $pkg..."
+    echo ""
+    if ! yay -S --needed "$pkg"; then
+        echo "Failed to install $pkg"
+        read -rp "Continue with remaining packages? [Y/n] " ans
+        [[ "$ans" =~ ^[Nn]$ ]] && exit 1
+    fi
+done
 
 echo "----------------------------"
 echo "----- Getting Dotfiles -----"
@@ -155,25 +165,53 @@ if [[ -f /etc/spotify-launcher.conf ]]; then
     sudo sed -i 's/^#\(extra_arguments=.*--enable-features=UseOzonePlatform.*\)/\1/' /etc/spotify-launcher.conf
 fi
 
-echo "------------------------------"
-echo "----- Installing wlogout -----"
-echo "------------------------------"
+echo "-----------------------------------------"
+echo "----- Installing wlogout and Joplin -----"
+echo "-----------------------------------------"
 git clone https://github.com/ArtsyMacaw/wlogout.git
 cd wlogout
 meson build
 ninja -C build
 sudo ninja -C build install
+wget -O - https://raw.githubusercontent.com/laurent22/joplin/dev/Joplin_install_and_update.sh | bash
 
+
+echo "---------------------------"
+echo "----- Installing sddm -----"
+echo "---------------------------"
+pacman -S sddm
+yay -S sddm-theme-catppuccin-git
+sudo systemctl enable sddm.service
+SDDM_CONF="/usr/lib/sddm/sddm.conf.d/default.conf"
+if grep -q '^\[Theme\]' "$SDDM_CONF"; then
+    if grep -q '^Current=' "$SDDM_CONF"; then
+        sed -i 's/^Current=.*/Current=catppuccin-macchiato-mauve/' "$SDDM_CONF"
+    else
+        sed -i '/^\[Theme\]/a Current=catppuccin-macchiato-mauve' "$SDDM_CONF"
+    fi
+else
+    cat >>"$SDDM_CONF" <<EOF
+
+[Theme]
+Current=catppuccin-macchiato-mauve
+EOF
+fi
+
+THEME_CONF="/usr/share/sddm/themes/catppuccin-macchiato-mauve/theme.conf"
+if grep -qi '^FontSize=' "$THEME_CONF"; then
+    sed -i 's/^FontSize=.*/FontSize=16/I' "$THEME_CONF"
+elif grep -qi '^fontSize=' "$THEME_CONF"; then
+    sed -i 's/^fontSize=.*/fontSize=16/I' "$THEME_CONF"
+else
+    echo "FontSize=16" >>"$THEME_CONF"
+fi
 
 echo "-----------------------------"
 echo "----- Enabling Services -----"
 echo "-----------------------------"
 sudo systemctl enable --now bluetooth.service 
-sudo systemctl enable --now libvirtd.service
 sudo systemctl enable --now docker
-sudo usermod -aG libvirt "$USER"
 sudo usermod -aG docker "$USER"
-sudo nvidia-ctk runtime configure --runtime=docker
 
 if [[ "$dev_choice" == "1" ]]; then
   echo "-------------------------------------------------"
