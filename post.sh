@@ -211,6 +211,9 @@ echo "----- Enabling Services -----"
 echo "-----------------------------"
 sudo systemctl enable --now bluetooth.service 
 sudo systemctl enable --now docker
+sudo systemctl enable nvidia-suspend.service
+sudo systemctl enable nvidia-resume.service
+sudo systemctl enable nvidia-hibernate.service
 sudo usermod -aG docker "$USER"
 
 if [[ "$dev_choice" == "1" ]]; then
